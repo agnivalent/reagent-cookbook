@@ -3,7 +3,7 @@
               [compojure.route :refer [not-found]]
               [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
               [ring.middleware.json :refer [wrap-json-response]]
-              [ring.util.response :refer [content-type]]
+              [ring.util.response :refer [file-response content-type]]
               [clojure.java.io :as io]))
 
 (def files (atom #{}))
@@ -28,6 +28,7 @@
         (ok (str result)))))
 
 (defroutes app-routes
+  (GET "/" (file-response "index.html" {:root public}))
   (GET "/list-files" [] (ok (vec @files)))
   (POST "/upload" [] upload)
   (GET "/files/:filename" [request filename] (get-tempfile filename))
